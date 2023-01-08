@@ -9,58 +9,21 @@ $intUpper = 0.25
 $intLower = 0.15
 
 
-$gaps = [System.Collections.ArrayList]@(
-        [PSCustomObject] @{
-            location = 0
-            gap = 0.4
-        },
-        [PSCustomObject] @{
-            location = 1
-            gap = 0.3
-        },
-        [PSCustomObject] @{
-            location = 2
-            gap = 0.3
-        },
-        [PSCustomObject] @{
-            location = 3
-            gap = 0.36
-        },
-        [PSCustomObject] @{
-            location = 4
-            gap = 0.4
-        },[PSCustomObject] @{
-            location = 5
-            gap = 0.36
-        },
-        [PSCustomObject] @{
-            location = 6
-            gap = 0.3
-        },
-        [PSCustomObject] @{
-            location = 7
-            gap = 0.4
-        },
-        [PSCustomObject] @{
-            location = 8
-            gap = 0.36
-        }
-        
-    ) #gap from cam to "bucket"
+$gaps = [System.Collections.ArrayList]@() #gap from cam to "bucket"
 
-# #figure out gap for each location
-# foreach ($location in $head)
-# {
+#figure out gap for each location
+foreach ($location in $head)
+{
 
-#     $shimHeight = ($shims | Where-Object {$_.shimID -eq $location.shimID}).height
+    $shimHeight = ($shims | Where-Object {$_.shimID -eq $location.shimID}).height
 
-#     $gap = [double]$location.distance + [double]$shimHeight
+    $gap = [double]$location.distance + [double]$shimHeight
 
-#     $gaps += [PSCustomObject] @{
-#         location = $location.location
-#         gap = $gap
-#     }
-# }
+    $gaps += [PSCustomObject] @{
+        location = $location.location
+        gap = $gap
+    }
+}
 
 
 
