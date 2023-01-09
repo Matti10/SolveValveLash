@@ -32,13 +32,16 @@ function check-shit {
     param(
         [System.Collections.ArrayList]$shimList,
         [System.Collections.ArrayList]$usedGaps,
-        $prefix = ""
+        $prefix = "",
+        $n = 0
     )
 
-    if($shimList.count -eq $shims.count)
+    Write-Host $shimList.Count
+
+    if($shimList.count -eq $shims.count-3)
     {
-        Write-Host "SOLVED!! :"
-        Write-Host $shimList
+        #write-host "SOLVED!! :"
+        #write-host $shimList
         $shimList | ft
         $shimList | export-csv -Path ".\sols\solution-$(Get-Date -format "ddmmss").csv" -force
 
@@ -52,12 +55,13 @@ function check-shit {
             $remainingGaps = $gaps | Where {$_.location -notin $usedGaps.location}
             $remainingShims = $shims | Where {$_.shimID -notin $shimList.shim}
         
-            foreach ($gap in $remainingGaps)
-            {
-                Write-Host -f blue "$prefix|-- Working on location $($gap.location)"
+            $remainingGaps | ForEach-Object {
+                $gap = $_
+                #write-host -f blue "$prefix|-- Working on location $($gap.location)"
                 foreach ($shim in $remainingShims)
                 {    
-                    Write-Host -f yellow "$prefix  |-- Working on shim $($shim.shimId)"
+                    #write-host -f yellow "$prefix  |-- Working on shim $($shim.shimId)"
+                     $n = $n+1
                     
                     [double]$combGap = [double]$gap.gap - [double]$shim.height
         
@@ -82,7 +86,7 @@ function check-shit {
         
                     if ($flag)
                     {
-                        Write-Host -f Green "$prefix    |-- Shim fits exploring deeper"
+                        #write-host -f Green "$prefix    |-- Shim fits exploring deeper"
                         
                         $shimList += [PSCustomObject] @{
                             location = $gap.location
@@ -93,7 +97,7 @@ function check-shit {
         
                         $prefix += "    "
         
-                        $e = check-shit -shimList $shimList -usedGaps $usedGaps -prefix $prefix
+                        $e = check-shit -shimList $shimList -usedGaps $usedGaps -prefix $prefix -n $n
         
                         if ($e)
                         {
@@ -103,15 +107,15 @@ function check-shit {
                         } 
                         else
                         {
-                            Write-Host $shimList
+                            #write-host $shimList
                         }
                     }
                     else
                     {
-                        Write-Host -f red "$prefix    |-- Shim doesn't fit, testing next shim"
+                        #write-host -f red "$prefix    |-- Shim doesn't fit, testing next shim"
                     }
                 }
-                Write-Host -f Red "$prefix  |-- No remaining shims fit, returning "
+                #write-host -f Red "$prefix  |-- No remaining shims fit, returning "
                 return $true
             }
         
